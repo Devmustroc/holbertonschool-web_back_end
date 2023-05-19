@@ -2,6 +2,7 @@
 """Async Comprehensions"""
 import asyncio
 import random
+from typing import list
 
 async_generator = __import__('0-async_generator').async_generator
 
