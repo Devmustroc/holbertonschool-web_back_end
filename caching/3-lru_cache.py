@@ -3,6 +3,7 @@
 
 BaseCaching = __import__('base_caching').BaseCaching
 
+
 class LRUCache(BaseCaching):
     """Inherits from BaseCaching and is a caching system"""
 
