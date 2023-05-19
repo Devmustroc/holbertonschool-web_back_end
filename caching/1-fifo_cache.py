@@ -3,28 +3,32 @@
 
 BaseCaching = __import__('base_caching').BaseCaching
 
-class FIFOCache(BaseCaching):
-    """LIFOCache class"""
 
-    def __init__(self):
-        """Constructor"""
+class FIFOCache(BaseCaching):
+    """Inherits from BaseCaching and is a caching system"""
+    order = []
+
+    def __int__(self):
+        """Initialize"""
         super().__init__()
-        self.queue = []
 
     def put(self, key, item):
-        """Add an item in the cache"""
+        """Assign to the dictionary self.cache_data"""
         if key and item:
             if key in self.cache_data:
-                self.queue.remove(key)
-            self.queue.append(key)
-            self.cache_data[key] = item
-            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                popped = self.queue.pop(-2)
-                del self.cache_data[popped]
-                print("DISCARD: {}".format(popped))
+                self.cache_data[key] = item
+                self.order.remove(key)
+            else:
+                if len(self.cache_data) >= self.MAX_ITEMS:
+                    discard = self.order[0]
+                    del self.cache_data[discard]
+                    print("DISCARD: {}".format(discard))
+                    self.order.pop(0)
+                self.cache_data[key] = item
+            self.order.append(key)
 
     def get(self, key):
-        """Get an item by key"""
+        """Return the value in self.cache_data linked to key"""
         if key in self.cache_data:
             return self.cache_data[key]
         return None
