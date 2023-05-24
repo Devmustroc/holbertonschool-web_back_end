@@ -3,7 +3,7 @@
 
 import csv
 import math
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Any
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
@@ -39,15 +39,19 @@ class Server:
         start, end = index_range(page, page_size)
         return self.dataset()[start:end]
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict[str, int | None | list[list]]:
-        """Return a dictionary with the following key-value pairs"""
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+        """Returns a dictionary containing key-value pairs
+        """
+        dataset = self.dataset()
         data = self.get_page(page, page_size)
-        total_pages = math.ceil(len(self.dataset()) / page_size)
+        next_page = page + 1 if page * page_size < len(dataset) else None
+        prev_page = page - 1 if page > 1 else None
+        total_pages = math.ceil(len(dataset) / page_size)
         return {
-            'page_size': len(data),
+            'page_size': page_size,
             'page': page,
             'data': data,
-            'next_page': page + 1 if page < total_pages else None,
-            'prev_page': page - 1 if page > 1 else None,
+            'next_page': next_page,
+            'prev_page': prev_page,
             'total_pages': total_pages
         }
