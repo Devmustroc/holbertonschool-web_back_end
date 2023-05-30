@@ -11,6 +11,7 @@ The function should use a regex to replace occurrences of certain field values
 import re
 
 import logging
+import typing
 
 
 class RedactingFormatter(logging.Formatter):
@@ -31,6 +32,5 @@ class RedactingFormatter(logging.Formatter):
         return filter_datum(self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
-def filter_datum(fields: list, redaction: str, message: str, separator: str) -> str:
-    """returns the log message obfuscated"""
+def filter_datum(fields: typing.List[str], redaction: str, message: str, separator: str) -> str:
     return re.sub(fr'({separator})(' + '|'.join(fields) + fr')({separator})', fr'\1{redaction}\3', message)
