@@ -8,24 +8,21 @@ Arguments:
     fields in the log line (message)
 The function should use a regex to replace occurrences of certain field values
 """
-import re
-
 import logging
+import re
 import typing
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
+    """ Redacting Formatter class """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: list[str]):
-        """ Constructor method"""
+    def __init__(self, fields: typing.List[str]):
         super(RedactingFormatter, self).__init__(self.FORMAT)
-        self.fields: list = fields
+        self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
         message = super().format(record)
