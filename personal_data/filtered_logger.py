@@ -8,7 +8,8 @@ import mysql.connector
 from logging import StreamHandler
 from typing import List, Tuple
 
-PII_FIELDS: Tuple[str, str, str, str, str] = ("name", "email", "phone_number", "address", "credit_card")
+PII_FIELDS: Tuple[str, str, str, str, str] =\
+    ("name", "email", "phone_number", "address", "credit_card")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -25,9 +26,12 @@ class RedactingFormatter(logging.Formatter):
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
-        """ Filters values in incoming log records using filter_datum """
+        """ Filters values in incoming log
+        records using filter_datum
+        """
         message = super().format(record)
-        return filter_datum(self.fields, self.REDACTION, message, self.SEPARATOR)
+        return filter_datum\
+            (self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
 def filter_datum(fields: typing.List[str], redaction: str, message: str, separator: str) -> str:
