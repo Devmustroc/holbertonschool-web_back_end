@@ -28,7 +28,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: typing.List[str]):
+    def __init__(self, fields: typing.List[str]) -> object:
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
@@ -58,3 +58,15 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
+
+
+def get_db() -> List[Tuple[str, str, str]]:
+    """ Returns a list of tuples """
+    list_of_tuples = []
+    with open('personal_data.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            list_of_tuples.append((row['name'], row['email'],
+                                   row['phone_number'], row['ssn'],
+                                   row['password']))
+    return list_of_tuples
