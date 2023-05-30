@@ -13,7 +13,7 @@ import mysql.connector
 from logging import StreamHandler
 from typing import List, Tuple
 
-PII_FIELDS: Tuple[str, str, str, str, str] =\
+PII_FIELDS: Tuple[str, str, str, str, str] = \
     ("name", "email", "phone_number", "address", "credit_card")
 
 
@@ -79,6 +79,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=db_name
     )
     return db
+
 
 def main() -> None:
     """ Main function to retrieve rows from the users table and display them in a filtered format """
