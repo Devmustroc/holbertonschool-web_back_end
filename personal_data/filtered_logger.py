@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 filtered_logger.py
-
-This module provides functions for logging personal data after applying filters to protect sensitive information.
+This module provides functions for logging personal data after
+applying filters to protect sensitive information.
 """
 import logging
 import re
