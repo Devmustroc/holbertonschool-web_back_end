@@ -14,7 +14,9 @@ import typing
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class """
+    """ Redacting Formatter
+        class RedactingFormatter that inherits from logging.Formatter
+    """
 
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
