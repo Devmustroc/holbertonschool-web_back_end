@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""
+filtered_logger.py
+
+This module provides functions for logging personal data after applying filters to protect sensitive information.
+"""
 import logging
 import re
 import typing
@@ -44,7 +49,9 @@ def filter_datum(fields: typing.List[str], redaction: str,
 
 
 def get_logger() -> logging.Logger:
-    """ Returns a logging.Logger object """
+    """
+    Returns a logging.Logger object
+    """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     logger.propagate = False
@@ -56,7 +63,9 @@ def get_logger() -> logging.Logger:
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
-    """Returns a connector to the database"""
+    """
+    Returns a connector to the database
+    """
     username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
     password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
