@@ -15,7 +15,7 @@ import typing
 from logging import StreamHandler
 from typing import List, Tuple
 
-PII_FIELDS: tuple[str, str, str, str, str] = ("name", "email", "phone_number", "address", "credit_card")
+PII_FIELDS: Tuple[str, str, str, str, str] = ("name", "email", "phone_number", "address", "credit_card")
 
 
 class RedactingFormatter(logging.Formatter):
