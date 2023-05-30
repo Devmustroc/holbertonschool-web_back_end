@@ -9,8 +9,13 @@ Arguments:
 The function should use a regex to replace occurrences of certain field values
 """
 import logging
+import csv
 import re
 import typing
+from logging import StreamHandler
+from typing import Tuple
+
+PII_FIELDS: tuple[str, str, str, str, str] = ("name", "email", "phone_number", "address", "credit_card")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -40,3 +45,18 @@ def filter_datum(fields: typing.List[str], redaction: str,
         message = re.sub(rf"{field}=.*?{separator}",
                          f"{field}={redaction}{separator}", message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """ Returns a logging.Logger object """
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    handler = StreamHandler()
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+
+    return logger
