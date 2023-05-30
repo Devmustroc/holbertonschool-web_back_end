@@ -79,3 +79,23 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=db_name
     )
     return db
+
+def main() -> None:
+    """ Main function to retrieve rows from the users table and display them in a filtered format """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    logger = get_logger()
+    for row in cursor:
+        message = f"name={row[0]}; email=" \
+                  f"{row[0]};" \
+                  f" phone_number={row[2]};" \
+                  f" address={row[3]};" \
+                  f" credit_card={row[4]};"
+        logger.info(message)
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
