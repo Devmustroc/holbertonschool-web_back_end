@@ -9,7 +9,9 @@ import uuid
 
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
-DATA = {}
+DATA = {
+    'User': {},
+}
 
 
 class Base():
