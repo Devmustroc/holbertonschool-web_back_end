@@ -71,10 +71,14 @@ class BasicAuth(Auth):
         """current user"""
         if not request or not self.authorization_header(request):
             return None
-        header = self.authorization_header(request)
-        based64_header = self.extract_base64_authorization_header(header)
-        decoded_header = self.decode_base64_authorization_header(based64_header)
-        user_email, user_pwd = self.extract_user_credentials(decoded_header)
+        header = \
+            self.authorization_header(request)
+        based64_header = \
+            self.extract_base64_authorization_header(header)
+        decoded_header = \
+            self.decode_base64_authorization_header(based64_header)
+        user_email, user_pwd = \
+            self.extract_user_credentials(decoded_header)
 
         if not user_email or not user_pwd:
             return None
