@@ -22,6 +22,7 @@ if auth_type == "auth":
 
 @app.before_request
 def before_request():
+    """ Before request handler"""
     if auth is None:
         return
 
@@ -38,21 +39,24 @@ def before_request():
 
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """ Not found handler
+    """
+    Not found handler
     """
     return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """ unauthorized handler
+    """
+    unauthorized handler
     """
     return jsonify({"error": "Unauthorized"}), 401
 
 
 @app.errorhandler(403)
 def forbidden(error) -> str:
-    """ forbidden handler
+    """
+    forbidden handler
     """
     return jsonify({"error": "Forbidden"}), 403
 
