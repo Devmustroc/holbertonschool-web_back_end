@@ -6,7 +6,6 @@ from api.v1.auth.auth import Auth
 from models.user import User
 
 
-
 class BasicAuth(Auth):
     """BasicAuth class"""
 
@@ -37,7 +36,7 @@ class BasicAuth(Auth):
             return None
 
     def extract_user_credentials(self, decoded_base64_authorization_header:
-                                 str) -> (str, str):
+    str) -> (str, str):
         """extract_user_credentials"""
         if (
                 decoded_base64_authorization_header is None
@@ -48,13 +47,14 @@ class BasicAuth(Auth):
         email, password = decoded_base64_authorization_header.split(":", 1)
         return email, password
 
-    def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
+    def user_object_from_credentials(self, user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
         """user_object_from_credentials"""
         if (
-            user_email is None
-            or not isinstance(user_email, str)
-            or user_pwd is None
-            or not isinstance(user_pwd, str)
+                user_email is None
+                or not isinstance(user_email, str)
+                or user_pwd is None
+                or not isinstance(user_pwd, str)
         ):
             return None
         user_list = User.search({"email": user_email})
