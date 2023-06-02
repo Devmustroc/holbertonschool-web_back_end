@@ -95,5 +95,5 @@ class BasicAuth(Auth):
             user = \
                 self.user_object_from_credentials(email, password)
             return user
-        except:
+        except Exception:
             return None
