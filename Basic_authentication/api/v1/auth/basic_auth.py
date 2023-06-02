@@ -33,7 +33,10 @@ class BasicAuth(Auth):
 
     def extract_user_credentials(
             self, decoded_base64_authorization_header: str) -> (str, str):
-        """Extract user email and password from the decoded Base64 authorization header value"""
+        """
+        Extract user email and password from
+        the decoded Base64 authorization header value
+        """
         if decoded_base64_authorization_header \
                 is None or not \
                 isinstance(decoded_base64_authorization_header, str):
