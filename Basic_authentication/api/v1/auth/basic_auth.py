@@ -15,4 +15,3 @@ class BasicAuth(Auth):
                 authorization_header.startswith("Basic "):
             return None
         return authorization_header[6:]
-
