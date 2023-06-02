@@ -9,6 +9,7 @@ app_views = Blueprint('app_views', __name__)
 
 @app_views.route('/unauthorized', methods=['GET'])
 def unauthorized_endpoint():
+    """ GET /api/v1/unauthorized """
     abort(401)
 
 
