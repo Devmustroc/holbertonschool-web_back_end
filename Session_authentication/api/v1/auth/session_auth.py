@@ -27,6 +27,7 @@ class SessionAuth(Auth):
         return self.user_id_by_session_id.get(session_id)
 
     def session_cookie(self, request=None):
+        """Return a cookie value from a request"""
         if request is None:
             return None
 
