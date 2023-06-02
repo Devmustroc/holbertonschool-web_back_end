@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""
-Session authentication views
+""" Module of auth_session views
 """
 
-from flask import jsonify, request, abort
 from api.v1.views import app_views
+from flask import abort, jsonify, request
+from api.v1.auth.session_auth import SessionAuth
 from models.user import User
-from os import getenv
-from api.v1.app import auth
+import os
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
@@ -25,28 +24,36 @@ def login() -> str:
     if not password or password == "":
         return jsonify({"error": "password missing"}), 400
 
-    user_list = User.search({"email": email})
-    if not user_list:
+    try:
+        user_list = User.search({"email": email})
+        if not user_list:
+            return jsonify({"error": "no user found for this email"}), 404
+    except Exception:
         return jsonify({"error": "no user found for this email"}), 404
 
     user = user_list[0]
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
 
+    from api.v1.app import auth
     session_id = auth.create_session(user.id)
-    cookie_name = getenv("SESSION_NAME")
+    cookie_name = os.getenv("SESSION_NAME")
     response = jsonify(user.to_json())
     response.set_cookie(cookie_name, session_id)
 
     return response
 
+
 @app_views.route('/auth_session/logout', methods=['DELETE'],
                  strict_slashes=False)
 def logout() -> str:
-    """ view for route /auth_session/logout, method DELETE """
+    """
+    DELETE /auth_session/logout
+    Returns an empty JSON dictionary with the status code 200
+    """
     from api.v1.app import auth
-    destroy_session = auth.destroy_session(request)
-    if destroy_session is False:
+    result = auth.destroy_session(request)
+    if not result:
         abort(404)
-    else:
-        return jsonify({}), 200
+
+    return jsonify({}), 200
