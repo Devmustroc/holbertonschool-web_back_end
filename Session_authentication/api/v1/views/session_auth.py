@@ -9,7 +9,10 @@ from models.user import User
 @app_views.route('/auth_session/login',
                  methods=['POST'], strict_slashes=False)
 def login() -> str:
-    """ POST /api/v1/auth_session/login """
+    """
+    POST /api/v1/auth_session/login
+    Logs in a user by creating a new Session ID
+    """
     email = request.form.get("email")
     if not email or email == "":
         return jsonify({"error": "email missing"}), 400
