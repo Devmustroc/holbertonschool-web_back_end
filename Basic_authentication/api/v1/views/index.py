@@ -3,6 +3,9 @@
 """
 from flask import jsonify, abort
 from api.v1.views import app_views
+from flask import abort, Blueprint
+
+index = Blueprint('index', __name__)
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
