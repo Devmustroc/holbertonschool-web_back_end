@@ -1,55 +1,37 @@
 #!/usr/bin/env python3
 """ View for Session Authentication """
-from flask import jsonify, abort, request
+from flask import request
+from api.v1.models import User
+from api.v1.app import auth
 from api.v1.views import app_views
-from api.v1.auth import auth
-from models.user import User
 
 
-@app_views.route('/auth_session/login',
-                 methods=['POST'], strict_slashes=False)
-def login() -> str:
-    """
-    POST /api/v1/auth_session/login
-    Logs in a user by creating a new Session ID
-    """
+@auth.route("/auth_session/login", methods=['POST'], strict_slashes=False)
+def login():
+    """ POST /api/v1/auth_session/login """
     email = request.form.get("email")
-    if not email or email == "":
-        return jsonify({"error": "email missing"}), 400
-
     password = request.form.get("password")
-    if not password or password == "":
+
+    if not email:
+        return jsonify({"error": "email missing"}), 400
+    if not password:
         return jsonify({"error": "password missing"}), 400
 
-    try:
-        user_list = User.search({"email": email})
-        if not user_list:
-            return jsonify({"error": "no user found for this email"}), 404
-    except Exception:
+    user = User.search(email)
+    if not user:
         return jsonify({"error": "no user found for this email"}), 404
-
-    user = user_list[0]
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
 
-    from api.v1.app import auth
     session_id = auth.create_session(user.id)
-    cookie_name = os.getenv("SESSION_NAME")
-    response = jsonify(user.to_json())
-    response.set_cookie(cookie_name, session_id)
-
-    return response
+    res = jsonify(user.to_json())
+    res.set_cookie(SESSION_NAME, session_id)
+    return res
 
 
-@app_views.route('/auth_session/logout', methods=['DELETE'], strict_slashes=False)
-def logout() -> str:
-    """
-    DELETE /auth_session/logout
-    Deletes the user session
-    """
-    from api.v1.app import auth
-    result = auth.destroy_session(request)
-    if not result:
+@auth.route("/auth_session/logout", methods=["DELETE"])
+def logout():
+    """ DELETE /api/v1/auth_session/logout """
+    if not auth.destroy_session(request):
         abort(404)
-
     return jsonify({}), 200
