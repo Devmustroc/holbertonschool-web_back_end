@@ -6,7 +6,8 @@ from api.v1.auth import auth
 from models.user import User
 
 
-@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
+@app_views.route('/auth_session/login',
+                 methods=['POST'], strict_slashes=False)
 def login() -> str:
     """ POST /api/v1/auth_session/login """
     email = request.form.get("email")
@@ -35,8 +36,25 @@ def login() -> str:
 
 @app_views.route('/auth_session/logout', methods=['DELETE'], strict_slashes=False)
 def logout() -> str:
-    """ DELETE /api/v1/auth_session/logout """
-    if not auth.destroy_session(request):
+    """
+    DELETE /auth_session/logout
+    Deletes the user session
+    """
+    from api.v1.app import auth
+
+    if not request:
+        abort(400)
+
+    session_id = auth.session_cookie(request)
+    if not session_id:
+        abort(400)
+
+    user_id = auth.user_id_for_session_id(session_id)
+    if not user_id:
+        abort(400)
+
+    destroyed = auth.destroy_session(request)
+    if not destroyed:
         abort(404)
 
-    return jsonify({})
+    return jsonify({}), 200
