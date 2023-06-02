@@ -11,6 +11,7 @@ import uuid
 class SessionAuth(Auth):
     """ Session Auth class"""
     user_id_by_session_id = {}
+    session_cookie_name = os.getenv("SESSION_NAME")
 
     def create_session(self, user_id: str = None) -> str:
         """Create a Session ID for a user_id"""
@@ -27,25 +28,39 @@ class SessionAuth(Auth):
         return self.user_id_by_session_id.get(session_id)
 
     def current_user(self, request=None):
-        """Return a User instance based on a cookie value"""
+        """
+        Returns a User instance based on a cookie value
+        """
+        if request is None:
+            return None
         session_id = self.session_cookie(request)
         if session_id is None:
             return None
         user_id = self.user_id_for_session_id(session_id)
-        if user_id:
-            user = User.get(user_id)
-            return user
-        return None
+        return User.get(user_id)
 
     def destroy_session(self, request=None):
-        """Delete the user session / log out"""
+        """
+        Deletes the user session / logs out
+        """
         if request is None:
             return False
+
         session_id = self.session_cookie(request)
-        if session_id is None:
+        if not session_id:
             return False
+
         user_id = self.user_id_for_session_id(session_id)
         if not user_id:
             return False
+
         del self.user_id_by_session_id[session_id]
         return True
+
+    def session_cookie(self, request=None):
+        """
+        Returns the value of a cookie from a request
+        """
+        if request is None:
+            return None
+        return request.cookies.get(self.session_cookie_name)

@@ -42,23 +42,7 @@ def logout() -> str:
     """
     from api.v1.app import auth
 
-    try:
-        if not request:
-            return jsonify({"error": "bad request"}), 400
-
-        session_id = auth.session_cookie(request)
-        if not session_id:
-            return jsonify({"error": "session ID not found"}), 400
-
-        user_id = auth.user_id_for_session_id(session_id)
-        if not user_id:
-            return jsonify({"error": "user ID not found for session ID"}), 400
-
-        destroyed = auth.destroy_session(request)
-        if not destroyed:
-            return jsonify({"error": "session could not be destroyed"}), 500
-
+    if auth.destroy_session(request):
         return jsonify({}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    else:
+        abort(404)
