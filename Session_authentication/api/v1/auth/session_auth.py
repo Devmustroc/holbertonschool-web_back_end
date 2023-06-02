@@ -2,8 +2,12 @@
 """ Module of Session Auth views"""
 
 from api.v1.auth.auth import Auth
+from api.v1.views import app_views
+import models.v1.views.session_auth
 import uuid
 from models.user import User
+from flask import jsonify, request
+from os import getenv
 
 
 class SessionAuth(Auth):
