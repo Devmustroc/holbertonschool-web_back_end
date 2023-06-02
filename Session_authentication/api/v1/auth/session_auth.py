@@ -2,11 +2,8 @@
 """ Module of Session Auth views"""
 
 from api.v1.auth.auth import Auth
-from api.v1.views import app_views
-from flask import abort, jsonify, request
-from models.user import User
-import os
 import uuid
+from models.user import User
 
 
 class SessionAuth(Auth):
