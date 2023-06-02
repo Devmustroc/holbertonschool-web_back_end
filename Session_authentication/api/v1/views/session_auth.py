@@ -14,11 +14,10 @@ def login() -> str:
     Logs in a user by creating a new Session ID
     """
     email = request.form.get("email")
-    password = request.form.get("password")
-
     if not email or email == "":
         return jsonify({"error": "email missing"}), 400
 
+    password = request.form.get("password")
     if not password or password == "":
         return jsonify({"error": "password missing"}), 400
 
@@ -40,7 +39,6 @@ def login() -> str:
     response.set_cookie(cookie_name, session_id)
 
     return response
-
 
 @app_views.route('/auth_session/logout', methods=['DELETE'], strict_slashes=False)
 def logout() -> str:
