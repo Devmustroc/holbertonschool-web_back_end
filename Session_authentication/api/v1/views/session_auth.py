@@ -6,32 +6,36 @@ from api.v1.app import auth
 from api.v1.views import app_views
 
 
-@auth.route("/auth_session/login", methods=['POST'], strict_slashes=False)
-def login():
-    """ POST /api/v1/auth_session/login """
-    email = request.form.get("email")
-    password = request.form.get("password")
-
-    if not email:
+@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
+def login() -> str:
+    """ view for route /auth_session/login, method POST """
+    u_email = request.form.get('email')
+    if not u_email:
         return jsonify({"error": "email missing"}), 400
-    if not password:
+    u_password = request.form.get('password')
+    if not u_password:
         return jsonify({"error": "password missing"}), 400
-
-    user = User.search(email)
+    user = User.search({'email': u_email})
     if not user:
         return jsonify({"error": "no user found for this email"}), 404
-    if not user.is_valid_password(password):
-        return jsonify({"error": "wrong password"}), 401
+    for u in user:
+        if u.is_valid_password(u_password):
+            from api.v1.app import auth
+            session_id = auth.create_session(u.id)
+            user_json = jsonify(u.to_json())
+            user_json.set_cookie(getenv('SESSION_NAME'), session_id)
+            return user_json
+        else:
+            return jsonify({"error": "wrong password"}), 401
 
-    session_id = auth.create_session(user.id)
-    res = jsonify(user.to_json())
-    res.set_cookie(SESSION_NAME, session_id)
-    return res
 
-
-@auth.route("/auth_session/logout", methods=["DELETE"])
-def logout():
-    """ DELETE /api/v1/auth_session/logout """
-    if not auth.destroy_session(request):
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def logout() -> str:
+    """ view for route /auth_session/logout, method DELETE """
+    from api.v1.app import auth
+    destroy_session = auth.destroy_session(request)
+    if destroy_session is False:
         abort(404)
-    return jsonify({}), 200
+    else:
+        return jsonify({}), 200
