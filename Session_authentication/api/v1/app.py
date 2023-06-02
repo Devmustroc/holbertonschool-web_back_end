@@ -24,9 +24,20 @@ else:
 
 @app.before_request
 def before_request():
-    """Handles before each request"""
-    if auth:
-        request.current_user = auth.current_user(request)
+    """ before_request handler """
+    if auth is not None:
+        require_auth = auth.require_auth(request.path,
+                                         ['/api/v1/status/',
+                                          '/api/v1/unauthorized/',
+                                          '/api/v1/forbidden/',
+                                          '/api/v1/auth_session/login/'])
+        if require_auth is True:
+            if (auth.authorization_header(request) is None and
+                    auth.session_cookie(request) is None):
+                abort(401)
+            request.current_user = auth.current_user(request)
+            if request.current_user is None:
+                abort(403)
 
 
 @app.errorhandler(404)
