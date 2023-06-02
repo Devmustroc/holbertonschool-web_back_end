@@ -1,35 +1,34 @@
 #!/usr/bin/env python3
 """ View for Session Authentication """
+from flask import jsonify, abort, request
 from api.v1.views import app_views
-from api.v1.app import auth
-from flask import abort, jsonify, request
-from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth import auth
 from models.user import User
-import os
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
 def login() -> str:
     """ POST /api/v1/auth_session/login """
-    email = request.form.get("email", "")
-    password = request.form.get("password", "")
-
-    if not email:
+    email = request.form.get("email")
+    if not email or email == "":
         return jsonify({"error": "email missing"}), 400
-    if not password:
+
+    password = request.form.get("password")
+    if not password or password == "":
         return jsonify({"error": "password missing"}), 400
 
-    user = User.search({"email": email})
-    if not user:
+    user_list = User.search({"email": email})
+    if not user_list:
         return jsonify({"error": "no user found for this email"}), 404
 
-    user = user[0]
+    user = user_list[0]
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
 
-    session_id = SessionAuth().create_session(user.id)
+    session_id = auth.create_session(user.id)
+    cookie_name = os.getenv("SESSION_NAME")
     response = jsonify(user.to_json())
-    response.set_cookie(os.getenv("SESSION_NAME"), session_id)
+    response.set_cookie(cookie_name, session_id)
 
     return response
 
@@ -37,7 +36,7 @@ def login() -> str:
 @app_views.route('/auth_session/logout', methods=['DELETE'], strict_slashes=False)
 def logout() -> str:
     """ DELETE /api/v1/auth_session/logout """
-    if not SessionAuth().destroy_session(request):
+    if not auth.destroy_session(request):
         abort(404)
 
-    return jsonify({}), 200
+    return jsonify({})
