@@ -14,21 +14,26 @@ def login() -> str:
     Logs in a user by creating a new Session ID
     """
     email = request.form.get("email")
+    password = request.form.get("password")
+
     if not email or email == "":
         return jsonify({"error": "email missing"}), 400
 
-    password = request.form.get("password")
     if not password or password == "":
         return jsonify({"error": "password missing"}), 400
 
-    user_list = User.search({"email": email})
-    if not user_list:
+    try:
+        user_list = User.search({"email": email})
+        if not user_list:
+            return jsonify({"error": "no user found for this email"}), 404
+    except Exception:
         return jsonify({"error": "no user found for this email"}), 404
 
     user = user_list[0]
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
 
+    from api.v1.app import auth
     session_id = auth.create_session(user.id)
     cookie_name = os.getenv("SESSION_NAME")
     response = jsonify(user.to_json())
@@ -44,8 +49,8 @@ def logout() -> str:
     Deletes the user session
     """
     from api.v1.app import auth
-
-    if auth.destroy_session(request):
-        return jsonify({}), 200
-    else:
+    result = auth.destroy_session(request)
+    if not result:
         abort(404)
+
+    return jsonify({}), 200

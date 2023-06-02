@@ -14,7 +14,6 @@ class SessionAuth(Auth):
     Session authentication
     """
     user_id_by_session_id = {}
-    session_cookie_name = os.getenv("SESSION_NAME")
 
     def create_session(self, user_id: str = None) -> str:
         """Create a Session ID for a user_id"""
@@ -44,10 +43,8 @@ class SessionAuth(Auth):
         user_id = self.user_id_for_session_id(session_id)
         return User.get(user_id)
 
-    def destroy_session(self, request=None):
-        """
-        Deletes the user session / logs out
-        """
+    def destroy_session(self, request=None) -> bool:
+        """Deletes the user session / logouts"""
         if request is None:
             return False
 
@@ -60,12 +57,5 @@ class SessionAuth(Auth):
             return False
 
         del self.user_id_by_session_id[session_id]
-        return True
 
-    def session_cookie(self, request=None):
-        """
-        Returns the value of a cookie from a request
-        """
-        if request is None:
-            return None
-        return request.cookies.get(self.session_cookie_name)
+        return True
