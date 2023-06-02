@@ -26,27 +26,18 @@ class SessionAuth(Auth):
             return None
         return self.user_id_by_session_id.get(session_id)
 
-    def current_user(self, request=None):
-        """Return a User instance based on a cookie value"""
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "Wrong format"}), 400
-        email = data.get("email", "").strip()
-        password = data.get("password", "").strip()
-        first_name = data.get("first_name", "").strip()
-        last_name = data.get("last_name", "").strip()
-        if not email:
-            return jsonify({'error': 'Email is required'}), 400
-        if not password:
-            return jsonify({'error': 'Password is required'}), 400
-        try:
-            user = User()
-            user.email = email
-            user.password = password
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
-            return jsonify(user.to_json()), 201
-        except Exception as e:
-            return jsonify({'error': f"Can't create User: {e}"}), 400
+    def session_cookie(self, request=None):
+        if request is None:
+            return None
 
+        session_cookie_name = os.getenv('SESSION_NAME')
+        return request.cookies.get(session_cookie_name)
+
+    def current_user(self, request=None):
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_id)
+        if user_id:
+            user = User.get(user_id)
+            return user
+
+        return None
