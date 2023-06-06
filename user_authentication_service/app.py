@@ -3,7 +3,7 @@ from flask import Flask, abort, jsonify, request, redirect
 from auth import Auth
 
 app = Flask(__name__)
-Auth = Auth()
+AUTH = Auth()
 
 
 @app.route('/', methods=['GET'])
@@ -45,4 +45,4 @@ def login() -> str:
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
