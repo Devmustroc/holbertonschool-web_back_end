@@ -55,5 +55,16 @@ def logout() -> str:
         abort(403)
 
 
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile() -> str:
+    """profile function"""
+    session_id = request.cookies.get("session_id")
+    try:
+        user = AUTH.get_user_from_session_id(session_id)
+        return jsonify({"email": user.email}), 200
+    except Exception:
+        abort(403)
+
+
 if __name__ == '__main__':
     app.run()
