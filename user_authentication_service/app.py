@@ -80,22 +80,7 @@ def get_reset_password_token() -> str:
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_pasword() -> str:
-    """Update the user's password.
-
-    This endpoint is used to update the password for a user who has requested a password reset.
-    It expects the following form data fields:
-    - email: The user's email address
-    - reset_token: The token received during the password reset process
-    - new_password: The new password to set
-
-    Returns:
-    - If the password is successfully updated, it returns a JSON payload:
-      {"email": "<user_email>", "message": "Password updated"}
-    - If there is an error during the password update process, it returns a 403 HTTP status code.
-
-    Raises:
-    - 403 HTTP status code if an exception occurs during the password update process.
-    """
+    """update_pasword function"""
     email = request.form.get("email")
     reset_token = request.form.get("reset_token")
     new_password = request.form.get("new_password")
