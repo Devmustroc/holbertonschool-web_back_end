@@ -56,7 +56,10 @@ class DB:
             raise
 
     def update_user(self, user_id: int, **kwargs) -> None:
-        """Locates the user to update, then will update the user’s attributes"""
+        """
+        Locates the user to update,
+        then will update the user’s attributes
+        """
         session = self._session
         user = self.find_user_by(id=user_id)
         for key, value in kwargs.items():
