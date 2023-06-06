@@ -29,14 +29,12 @@ def user_register():
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login() -> str:
-    """
-    POST /sessions
-    """
-    email = request.form.get('email')
-    password = request.form.get('password')
+    """login function"""
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-    if Auth.valid_login(email, password):
-        session_id = Auth.create_session(email)
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
         response = jsonify({"email": "{}".format(email), "message": "logged in"})
         response.set_cookie("session_id", session_id)
         return response
