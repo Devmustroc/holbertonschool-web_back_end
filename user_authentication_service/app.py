@@ -80,7 +80,7 @@ def get_reset_password_token() -> str:
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_pasword() -> str:
-    """Function to respond to the PUT /reset_password route"""
+    """update_pasword function"""
     email = request.form.get("email")
     reset_token = request.form.get("reset_token")
     new_password = request.form.get("new_password")
