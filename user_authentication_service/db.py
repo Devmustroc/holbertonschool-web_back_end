@@ -67,3 +67,18 @@ class DB:
                 raise ValueError
             setattr(user, key, value)
         session.commit()
+
+    def get_user_from_session_id(self, session_id: str) -> str:
+        """
+        Takes a single session_id string argument
+        and returns the corresponding User or None
+        """
+        if session_id is None:
+            return None
+        if not isinstance(session_id, str):
+            return None
+        try:
+            user = self.find_user_by(session_id=session_id)
+            return user
+        except NoResultFound:
+            return None
