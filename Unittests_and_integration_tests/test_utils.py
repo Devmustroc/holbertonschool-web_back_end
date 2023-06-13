@@ -14,7 +14,7 @@ class TestAccessNestedMap(TestCase):
         ({"a": {"b": 2}}, ("a", "b"), 2)
     ])
     def test_access_nested_map(self, nested_map: Mapping,
-                               path: Sequence, expected: Any) -> None:
+                               path: Sequence, expected_result: Any) -> None:
         """Test access_nested_map function"""
         self.assertEqual(access_nested_map(nested_map, path), expected_result)
 
@@ -22,10 +22,8 @@ class TestAccessNestedMap(TestCase):
         ({}, ("a",)),
         ({"a": 1}, ("a", "b"))
     ])
-    def test_access_nested_map_exception(self, nested_map: Mapping,
-                                         path: Sequence,
-                                         expected: Any) -> None:
-        """Tests the access_nested_map function"""
-        with self.assertRaises(KeyError) as err:
+    def test_access_nested_map_exception(self, nested_map, path):
+        with self.assertRaises(KeyError) as cm:
             access_nested_map(nested_map, path)
-        self.assertEqual(expected, str(err.exception))
+        self.assertEqual(str(cm.exception), f"Key not found: '{path[-1]}'")
+
