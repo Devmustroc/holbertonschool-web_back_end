@@ -36,8 +36,9 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json: Callable) \
             -> None:
-        """Test that the list of repos is what you expect from the chosen payload.
-        Test that the mocked property and the mocked get_json was called once.
+        """
+        Test that the list of repos is what you
+        expect from the chosen payload.
         """
         mock_get_json.return_value = [{"name": "google"},
                                       {"name": "abc"}]
