@@ -5,7 +5,7 @@ from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
-from typing import Dict
+from typing import Dict, List, Callable
 
 
 class TestGithubOrgClient(unittest.TestCase):
