@@ -33,15 +33,15 @@ class TestAccessNestedMap(TestCase):
 
 class TestGetJson(TestCase):
     """TestGetJson class"""
-
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url: str, test_payload: dict) -> None:
         """Tests the get_json function"""
-        config = {'return_value.json.return_value': test_payload}
-        mock_obj = mock.Mock(**config)
-        with mock.patch('requests.get', return_value=mock_obj):
+        mock_response = mock.Mock()
+        mock_response.json.return_value = test_payload
+        with mock.patch('requests.get', return_value=mock_response):
             response = get_json(test_url)
             self.assertEqual(response, test_payload)
+            mock_response.json.assert_called_once()
