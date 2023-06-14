@@ -2,7 +2,7 @@
 """Unittests for utils.py"""
 from unittest import TestCase, mock
 from parameterized import parameterized
-from utils import access_nested_map
+from utils import access_nested_map, get_json
 from typing import Any, Mapping, Sequence
 
 
