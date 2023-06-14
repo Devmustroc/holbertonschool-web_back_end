@@ -20,7 +20,8 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that GithubOrgClient.org returns the correct value"""
         test_class = GithubOrgClient(org_name)
         test_class.org()
-        mock_get_json.assert_called_once_with(f'https://api.github.com/orgs/{org_name}')
+        mock_get_json.assert_called_once_with(
+            f'https://api.github.com/orgs/{org_name}')
 
     def test_public_repos_url(self) -> None:
         """Test that the result of _public_repos_url is the expected one
@@ -33,7 +34,8 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(test_class._public_repos_url, "test_url")
 
     @patch('client.get_json')
-    def test_public_repos(self, mock_get_json: Callable) -> None:
+    def test_public_repos(self, mock_get_json: Callable) \
+            -> None:
         """Test that the list of repos is what you expect from the chosen payload.
         Test that the mocked property and the mocked get_json was called once.
         """
