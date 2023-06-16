@@ -32,9 +32,11 @@ def get_locale():
     locale = request.args.get('locale')
     if locale and locale in app.config['LANGUAGES']:
         return locale
-    if hasattr(g, 'user') and g.user and g.user['locale'] in app.config['LANGUAGES']:
+    if hasattr(g, 'user') and g.user and \
+            g.user['locale'] in app.config['LANGUAGES']:
         return g.user['locale']
-    header_locale = request.accept_languages.best_match(app.config['LANGUAGES'])
+    header_locale = request.accept_languages.best_match(
+        app.config['LANGUAGES'])
     if header_locale:
         return header_locale
     return app.config['BABEL_DEFAULT_LOCALE']
