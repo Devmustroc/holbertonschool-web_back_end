@@ -26,45 +26,40 @@ app.config.from_object(Config)
 
 
 @babel.localeselector
-def get_locale() -> str:
-    """
-    This function is invoked for each request
-    to select a language translation to use for that request
-    """
-    languages = app.config['LANGUAGES']
-    locale = request.args.get("locale")
-    if locale and locale in languages:
+def get_locale():
+    """Get locale"""
+    locale = request.args.get('locale')
+    if locale and locale in app.config['LANGUAGES']:
         return locale
-    return request.accept_languages.best_match(languages)
+
+    if g.user and g.user['locale'] in app.config['LANGUAGES']:
+        return g.user['locale']
+    header_locale = request.accept_languages.best_match(app.config['LANGUAGES'])
+    if header_locale:
+        return header_locale
+    return app.config['BABEL_DEFAULT_LOCALE']
 
 
-def get_user() -> Dict:
-    """Returns a user dictionary or None based on the ID"""
-    try:
-        user_id = int(request.args.get("login_as"))
-        if user_id in users.keys():
-            return users[user_id]
-    except Exception:
-        return None
-
+def get_user():
+    """Returns a user dictionary or None if the ID cannot be found"""
+    user_id = request.args.get('login_as')
+    if user_id:
+        user = users.get(int(user_id))
+        if user and user['locale'] in app.config['LANGUAGES']:
+            return user
+    return None
 
 @app.before_request
 def before_request():
-    """Finds a user if any, and set it as a global on flask.g.user"""
-    user = get_user()
-    if user:
-        g.user = user
+    g.user = get_user()
 
 
-@app.route("/")
-def hello_world():
-    """Route that renders a simple template"""
-    try:
-        username = g.user["name"]
-    except Exception:
-        username = None
-    return render_template("5-index.html", username=username)
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    app.config['LANGUAGES'] = ['en', 'fr']
+    app.config['BABEL_DEFAULT_LOCALE'] = 'en'
     app.run()
