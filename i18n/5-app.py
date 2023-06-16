@@ -48,6 +48,7 @@ def get_user():
         return user
     return None
 
+
 @app.before_request
 def before_request():
     g.user = get_user()
