@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""module"""
+"""Route module for the API"""
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
 from typing import Dict
@@ -16,6 +16,7 @@ users = {
 
 class Config:
     """Config class"""
+
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -26,7 +27,9 @@ app.config.from_object(Config)
 
 @babel.localeselector
 def get_locale() -> str:
-    """Get locale"""
+    """
+    Determine the best match with our supported languages.
+    """
     languages = app.config['LANGUAGES']
     locale = request.args.get("locale")
     if locale and locale in languages:
@@ -34,25 +37,27 @@ def get_locale() -> str:
     return request.accept_languages.best_match(languages)
 
 
-def get_user(user_id) -> Dict:
-    """Returns a user"""
-    login_as = request.args.get('login_as')
-    if login_as and int(login_as) == user_id:
-        return users.get(user_id)
-    return None
+def get_user() -> Dict:
+    """Returns a user dictionary or None if the ID cannot be found"""
+    try:
+        user_id = int(request.args.get("login_as"))
+        if user_id in users.keys():
+            return users[user_id]
+    except Exception:
+        return None
 
 
 @app.before_request
 def before_request():
-    """Finds a user if any"""
-    user_id = 2  # Change the user ID according to your needs
-    user = get_user(user_id)
-    g.user = user
+    """Finds a user if any, and set it as a global"""
+    user = get_user()
+    if user:
+        g.user = user
 
 
 @app.route("/")
 def hello_world():
-    """Index"""
+    """Route for index"""
     try:
         username = g.user["name"]
     except Exception:
