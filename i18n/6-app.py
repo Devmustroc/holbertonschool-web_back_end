@@ -26,8 +26,11 @@ app.config.from_object(Config)
 
 
 @babel.localeselector
-def get_locale():
-    # Check if locale is provided in URL parameters
+def get_locale() -> str:
+    """
+    This function is invoked for each request
+    to select a language translation to use for that request
+    """
     languages = app.config['LANGUAGES']
     locale = request.args.get("locale")
     if locale and locale in languages:
@@ -41,7 +44,7 @@ def get_locale():
 
 
 def get_user() -> Dict:
-    """Returns a user dictionary or None if the ID cannot be found"""
+    """Returns a user dictionary or None based on the ID"""
     try:
         user_id = int(request.args.get("login_as"))
         if user_id in users.keys():
@@ -52,6 +55,7 @@ def get_user() -> Dict:
 
 @app.before_request
 def before_request():
+    """Finds a user if any, and set it as a global on flask.g.user"""
     user = get_user()
     if user:
         g.user = user
@@ -59,12 +63,12 @@ def before_request():
 
 @app.route("/")
 def hello_world():
-    """Route for index"""
+    """Route that renders a simple template"""
     try:
         username = g.user["name"]
     except Exception:
         username = None
-    return render_template("5-index.html", username=username)
+    return render_template("6-index.html", username=username)
 
 
 if __name__ == "__main__":
