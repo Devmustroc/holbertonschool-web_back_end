@@ -28,19 +28,16 @@ app.config.from_object(Config)
 @babel.localeselector
 def get_locale():
     # Check if locale is provided in URL parameters
-    if 'locale' in request.args and request.args['locale'] in app.config['LANGUAGES']:
-        return request.args['locale']
-
-    # Check if user is logged in and has a preferred locale
-    if hasattr(g, 'user') and g.user and 'locale' in g.user and g.user['locale'] in app.config['LANGUAGES']:
-        return g.user['locale']
-
-    # Check if locale is provided in request header
-    if request.accept_languages:
-        return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-    # Return default locale
-    return app.config['BABEL_DEFAULT_LOCALE']
+    languages = app.config['LANGUAGES']
+    locale = request.args.get("locale")
+    if locale and locale in languages:
+        return locale
+    try:
+        if g.user["locale"] in languages:
+            return g.user["locale"]
+    except Exception:
+        pass
+    return request.accept_languages.best_match(languages)
 
 
 def get_user() -> Dict:
@@ -55,10 +52,9 @@ def get_user() -> Dict:
 
 @app.before_request
 def before_request():
-    user_id = request.args.get('login_as', default=None, type=int)
-    user = get_user(user_id)
-    g.user = user
-
+    user = get_user()
+    if user:
+        g.user = user
 
 @app.route("/")
 def hello_world():
