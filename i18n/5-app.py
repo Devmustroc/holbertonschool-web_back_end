@@ -45,8 +45,7 @@ def get_user():
     user_id = request.args.get('login_as')
     if user_id:
         user = users.get(int(user_id))
-        if user and user['locale'] in app.config['LANGUAGES']:
-            return user
+        return user
     return None
 
 @app.before_request
