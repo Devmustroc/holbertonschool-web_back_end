@@ -56,6 +56,7 @@ def before_request():
     if user:
         g.user = user
 
+
 @app.route("/")
 def hello_world():
     """Route for index"""
