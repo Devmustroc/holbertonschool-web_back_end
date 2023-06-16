@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, g
 from flask_babel import Babel
 from typing import Dict
 
+
 app = Flask(__name__)
 babel = Babel(app)
 users = {
@@ -57,6 +58,7 @@ def before_request():
 
 @app.route('/')
 def home():
+    """Home route"""
     return render_template('5-index.html')
 
 
