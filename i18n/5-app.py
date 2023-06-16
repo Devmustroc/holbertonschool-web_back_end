@@ -33,18 +33,18 @@ def get_locale():
 
 @app.before_request
 def before_request():
-    """Before request"""
-    user_id = request.args.get('login_as')
-    if user_id:
-        user = get_user(int(user_id))
-        if user:
-            g.user = user
+    """Find user if any and set as global on `flask.g`"""
+    user = get_user()
+    if user:
+        g.user = user
 
 
 def get_user(user_id):
     """Get user"""
     try:
-        return users.get(int(request.args.get('login_as')))
+        user_id = int(request.args.get('login_as'))
+        if user_id in users.keys():
+            return users[user_id]
     except Exception:
         return None
 
