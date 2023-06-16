@@ -24,12 +24,11 @@ app.config.from_object(Config)
 
 
 @babel.localeselector
-def get_locale() -> str:
-    """Get locale"""
-    if 'locale' in request.args and request.args['locale'] \
-            in app.config['LANGUAGES']:
+def get_locale():
+    if 'locale' in request.args and request.args['locale'] in app.config['LANGUAGES']:
         return request.args['locale']
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
 
 
 @app.before_request
