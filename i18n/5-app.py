@@ -34,22 +34,20 @@ def get_locale() -> str:
     return request.accept_languages.best_match(languages)
 
 
-def get_user() -> Dict:
+def get_user(user_id) -> Dict:
     """Returns a user"""
-    try:
-        user_id = int(request.args.get("login_as"))
-        if user_id in users.keys():
-            return users[user_id]
-    except Exception:
-        return None
+    login_as = request.args.get('login_as')
+    if login_as and int(login_as) == user_id:
+        return users.get(user_id)
+    return None
 
 
 @app.before_request
 def before_request():
     """Finds a user if any"""
-    user = get_user()
-    if user:
-        g.user = user
+    user_id = 2  # Change the user ID according to your needs
+    user = get_user(user_id)
+    g.user = user
 
 
 @app.route("/")
