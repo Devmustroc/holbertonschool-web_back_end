@@ -59,7 +59,7 @@ def before_request():
 
 
 @babel.timezoneselector
-def get_timezone():
+def get_timezone() -> str:
     # Check timezone from URL parameters
     timezone_url = request.args.get("timezone")
     try:
