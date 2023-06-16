@@ -34,7 +34,7 @@ def get_locale():
     return request.accept_languages.best_match(languages)
 
 
-def get_user(user_id) -> dict:
+def get_user() -> dict:
     """Get user"""
     try:
         user_id = int(request.args.get('login_as'))
@@ -53,7 +53,7 @@ def before_request():
 
 
 @app.route('/')
-def index():
+def hello_world():
     """Index"""
     try:
         username = g.user['name']
