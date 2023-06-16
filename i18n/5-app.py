@@ -2,6 +2,7 @@
 """ Basic Flask app """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
+from typing import Dict
 
 app = Flask(__name__)
 babel = Babel(app)
@@ -25,10 +26,11 @@ app.config.from_object(Config)
 
 @babel.localeselector
 def get_locale():
-    if 'locale' in request.args and request.args['locale'] in app.config['LANGUAGES']:
+    """Get locale"""
+    if 'locale' in request.args and request.args['locale'] \
+            in app.config['LANGUAGES']:
         return request.args['locale']
     return request.accept_languages.best_match(app.config['LANGUAGES'])
-
 
 
 @app.before_request
@@ -39,7 +41,7 @@ def before_request():
         g.user = user
 
 
-def get_user(user_id):
+def get_user(user_id) -> dict:
     """Get user"""
     try:
         user_id = int(request.args.get('login_as'))
