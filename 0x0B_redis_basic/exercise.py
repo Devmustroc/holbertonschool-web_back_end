@@ -78,13 +78,10 @@ class Cache:
         input_history = self._redis.lrange(input_key, 0, -1)
         output_history = self._redis.lrange(output_key, 0, -1)
 
-        print("{} was called {} times:".format(method.__qualname__,
-                                               self._redis.get(method.__qualname__).decode("utf-8")))
+        print(f"{method.__qualname__} was called {len(input_history)} times:")
 
-        for i, o in zip(input_history, output_history):
-            print("{}(*{}) -> {}".format(method.__qualname__,
-                                         i.decode("utf-8"),
-                                         o.decode("utf-8")))
-
+        for input1, output1 in zip(input_history, output_history):
+            print(f"{method.__qualname__}(*{input1.decode('utf-8')}) -> "
+                  f"{output1.decode('utf-8')}")
 
 
