@@ -9,6 +9,7 @@ import functools
 from typing import Union, Optional, Callable
 import redis
 import uuid
+from redis.commands.search import result
 
 
 def count_calls(method: Callable) -> Callable:
@@ -41,19 +42,28 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(self, method: Callable):
+def replay(self, method: Callable) -> None:
     """Method replay"""
-    input_key = method.__qualname__ + ":inputs"
-    output_key = method.__qualname__ + ":outputs"
+    local_redis = redis.Redis()
+    pipe = local_redis.pipeline()
 
-    input_history = self._redis.lrange(input_key, 0, -1)
-    output_history = self._redis.lrange(output_key, 0, -1)
+    key_input = method.__qualname__ + ":inputs"
+    key_output = method.__qualname__ + ":outputs"
 
-    print(f"{method.__qualname__} was called {len(input_history)} times:")
+    pipe.llen(key_input)
+    pipe.lrange(key_input, 0, -1)
+    pipe.lrange(key_output, 0, -1)
+    data = pipe.execute()
 
-    for input1, output1 in zip(input_history, output_history):
-        print(f"{method.__qualname__}(*{input1.decode('utf-8')}) -> "
-              f"{output1.decode('utf-8')}")
+    num_calls = result[0]
+    inputs = result[1]
+    outputs = result[2]
+
+    print(f"{method.__qualname__} was called {num_calls} times:")
+
+    for inp, out in zip(inputs, outputs):
+        print(f"{method.__qualname__}(*{inp.decode('utf-8')}) -> {out.decode('utf-8')}")
+
 
 
 class Cache:
