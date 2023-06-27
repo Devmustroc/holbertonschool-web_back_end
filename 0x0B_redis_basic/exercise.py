@@ -53,11 +53,11 @@ def replay(self, method: Callable) -> None:
     history_input = local_redis.lrange(key_input, 0, -1)
     history_output = local_redis.lrange(key_output, 0, -1)
 
-    result = list(zip(history_input, history_output))
+    results = list(zip(history_input, history_output))
 
     print(f"{method.__qualname__} was called {len(history_input)} times:")
-    for i in result:
-        print(f"{method.__qualname__}(*{i[0]}) -> {i[1]}")
+    for i in results:
+        print(f"{method.__qualname__}(*{i[0].decode()}) -> {i[1].decode()}")
 
 
 class Cache:
