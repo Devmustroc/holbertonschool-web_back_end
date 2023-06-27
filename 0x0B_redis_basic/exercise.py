@@ -26,6 +26,7 @@ def count_calls(method: Callable) -> Callable:
 
 def call_history(method: Callable) -> Callable:
     """Decorator call history"""
+
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         """Wrapper"""
@@ -38,6 +39,21 @@ def call_history(method: Callable) -> Callable:
         return output
 
     return wrapper
+
+
+def replay(self, method: Callable):
+    """Method replay"""
+    input_key = method.__qualname__ + ":inputs"
+    output_key = method.__qualname__ + ":outputs"
+
+    input_history = self._redis.lrange(input_key, 0, -1)
+    output_history = self._redis.lrange(output_key, 0, -1)
+
+    print(f"{method.__qualname__} was called {len(input_history)} times:")
+
+    for input1, output1 in zip(input_history, output_history):
+        print(f"{method.__qualname__}(*{input1.decode('utf-8')}) -> "
+              f"{output1.decode('utf-8')}")
 
 
 class Cache:
@@ -69,19 +85,3 @@ class Cache:
     def get_int(self, key: str) -> int:
         """Method get_int"""
         return self.get(key, int)
-
-    def replay(self, method: Callable):
-        """Method replay"""
-        input_key = method.__qualname__ + ":inputs"
-        output_key = method.__qualname__ + ":outputs"
-
-        input_history = self._redis.lrange(input_key, 0, -1)
-        output_history = self._redis.lrange(output_key, 0, -1)
-
-        print(f"{method.__qualname__} was called {len(input_history)} times:")
-
-        for input1, output1 in zip(input_history, output_history):
-            print(f"{method.__qualname__}(*{input1.decode('utf-8')}) -> "
-                  f"{output1.decode('utf-8')}")
-
-
