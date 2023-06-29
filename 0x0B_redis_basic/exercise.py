@@ -52,7 +52,7 @@ def replay(self, method: Callable) -> None:
     history_output = local_redis.lrange(key_outputs, 0, -1)
 
     res = list(zip(history_input, history_output))
-    print("{self.__qualname__} was called {len(res)} times:")
+    print(f"{self.__qualname__} was called {len(res)} times:")
 
     for item in res:
         print(f"{self.__qualname__}(*{item[0].decode()}) -> {item[1].decode()}")
