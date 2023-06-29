@@ -9,7 +9,6 @@ import functools
 from typing import Union, Optional, Callable
 import redis
 import uuid
-from redis.commands.search import result
 
 
 def count_calls(method: Callable) -> Callable:
@@ -43,21 +42,15 @@ def call_history(method: Callable) -> Callable:
 
 
 def replay(self, method: Callable) -> None:
-    """Display the history of calls of a particular function."""
-    local_redis = redis.Redis()
-    pipe = local_redis.pipeline()
+    """Display the history of calls of a particular function"""
+    name = method.__qualname__
+    count = self.get(name)
+    inputs = self._redis.lrange(name + ":inputs", 0, -1)
+    outputs = self._redis.lrange(name + ":outputs", 0, -1)
 
-    key_input = method.__qualname__ + ":inputs"
-    key_output = method.__qualname__ + ":outputs"
-
-    history_input = local_redis.lrange(key_input, 0, -1)
-    history_output = local_redis.lrange(key_output, 0, -1)
-
-    results = list(zip(history_input, history_output))
-
-    print(f"{method.__qualname__} was called {len(history_input)} times:")
-    for i in results:
-        print(f"{method.__qualname__}(*{i[0].decode()}) -> {i[1].decode()}")
+    print(f"{name} was called {count} times:")
+    for i, o in zip(inputs, outputs):
+        print(f"{name}(*{i.decode('utf-8')}) -> {o.decode('utf-8')}")
 
 
 class Cache:
