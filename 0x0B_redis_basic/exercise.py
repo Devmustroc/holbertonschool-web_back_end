@@ -9,7 +9,6 @@ import functools
 from typing import Union, Optional, Callable
 import redis
 import uuid
-from redis.commands.search import result
 
 
 def count_calls(method: Callable) -> Callable:
