@@ -1,5 +1,5 @@
 -- Ranks Country origins of bands by number of (non-unique) fans
-SELECT origin, SUM(fans) AS nb_fans
+SELECT band_name, (IFNULL(split, YEAR(CURRENT_DATE())) - formed) AS lifespan
 FROM metal_bands
-GROUP BY origin
-ORDER BY nb_fans DESC;
+WHERE style LIKE "%Glam rock%"
+ORDER BY lifespan DESC;
