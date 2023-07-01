@@ -5,15 +5,22 @@
 -- The function SafeDiv takes 2 arguments: a, INT b, INT
 -- And returns a / b or 0 if b == 0
 DELIMITER //
-
 CREATE FUNCTION SafeDiv(a INT, b INT)
 RETURNS FLOAT DETERMINISTIC
+DELIMITER //
+
+CREATE FUNCTION SafeDiv(a INT, b INT)
+RETURNS FLOAT
 BEGIN
+    DECLARE result FLOAT;
+
     IF b = 0 THEN
-        RETURN 0;
+        SET result = 0;
     ELSE
-        RETURN (a / b);
+        SET result = a / b;
     END IF;
-END; //
+
+    RETURN result;
+END //
 
 DELIMITER ;
