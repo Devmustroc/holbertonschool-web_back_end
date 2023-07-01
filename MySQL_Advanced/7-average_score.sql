@@ -7,14 +7,8 @@
 DELIMITER //
 CREATE PROCEDURE ComputeAverageScoreForUser(IN user_id INT)
 BEGIN
-    DECLARE total_score FLOAT;
-    DECLARE project_count INT;
-    SELECT SUM(score), COUNT(*) INTO total_score, project_count
-    FROM corrections
-    WHERE user_id = user_id;
     UPDATE users
-    SET average_score = total_score / project_count
+    SET average_score = (SELECT AVG(score) FROM corrections WHERE user_id = user_id)
     WHERE id = user_id;
 END //
-
 DELIMITER ;
