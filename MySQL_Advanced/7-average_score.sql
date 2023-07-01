@@ -15,5 +15,6 @@ BEGIN
     UPDATE users
     SET average_score = total_score / project_count
     WHERE id = user_id;
-END//
+END //
+
 DELIMITER ;
