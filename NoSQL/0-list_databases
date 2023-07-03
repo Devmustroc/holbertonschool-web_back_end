@@ -1,0 +1,3 @@
+#!/bin/bash
+# This script that lists all databases in Mongodb
+show dbs
