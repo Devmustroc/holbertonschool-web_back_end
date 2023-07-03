@@ -1,0 +1,4 @@
+// Script that creates or uses the database my_db
+// and creates a table called my_table
+
+use my_db;
