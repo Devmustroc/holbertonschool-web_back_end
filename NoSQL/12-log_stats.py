@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ 12. Log stats """
 
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 
 if __name__ == "__main__":
     """ provides some stats about Nginx logs stored in MongoDB """
@@ -17,13 +17,13 @@ if __name__ == "__main__":
         print(f"\tmethod {method}: {count}")
 
     check = nginx_logs.count_documents(
-        {"method": "GET", "path": "/status"}
+        {"$and": [{"path": "/status"}, {"method": "GET"}]}
     )
     print(f"{check} status check")
 
     pipeline = [
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
+        {"$sort": DESCENDING},
         {"$limit": 10}
     ]
     print("IPs:")
