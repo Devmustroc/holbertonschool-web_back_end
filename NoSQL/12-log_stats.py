@@ -1,31 +1,46 @@
 #!/usr/bin/env python3
-""" 12. Log stats """
+"""Script that provides some stats about Nginx logs stored in MongoDB"""
 
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 
 if __name__ == "__main__":
-    """ provides some stats about Nginx logs stored in MongoDB """
-    client = MongoClient('mongodb://localhost:27017')  # Update MongoDB connection URL if needed
-    nginx_logs = client.logs.nginx
 
-    documents = nginx_logs.count_documents({})
-    print(f"{documents} logs")
+    client = MongoClient('mongodb://127.0.0.1:27017')
+    ngnix_log = client.logs.nginx
+
+    documents = ngnix_log.count_documents({})
+    print("{} logs".format(documents))
 
     print("Methods:")
     for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-        count = nginx_logs.count_documents({"method": method})
-        print(f"\tmethod {method}: {count}")
+        print("\tmethod {}: {}".format(
+            method,
+            ngnix_log.count_documents({"method": method})
+        ))
 
-    check = nginx_logs.count_documents(
-        {"$and": [{"path": "/status"}, {"method": "GET"}]}
-    )
-    print(f"{check} status check")
+    print("{} status check".format(
+        ngnix_log.count_documents({"$and": [{"path": "/status"},
+                                                   {"method": "GET"}]})
+    ))
 
     pipeline = [
-        {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-        {"$limit": 10}
-    ]
+            {
+                "$group": {
+                    "_id": "$ip",
+                    "count": {"$sum": 1}
+                }
+            },
+            {
+                "$sort": {
+                    "count": DESCENDING
+                }
+            },
+            {
+                "$limit": 10
+            }
+        ]
+
     print("IPs:")
-    for ip in nginx_logs.aggregate(pipeline):
-        print(f"\t{ip.get('_id')}: {ip.get('count')}")
+    res = list(ngnix_log.aggregate(pipeline))
+    for item in res:
+        print("\t{}: {}".format(item.get("_id"), item.get("count")))
