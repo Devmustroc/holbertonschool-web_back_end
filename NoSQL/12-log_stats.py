@@ -5,11 +5,11 @@ from pymongo import MongoClient
 
 if __name__ == "__main__":
     """ provides some stats about Nginx logs stored in MongoDB """
-    client = MongoClient('mongodb://172.0.0.1:27017')
+    client = MongoClient('mongodb://localhost:27017')  # Update MongoDB connection URL if needed
     nginx_logs = client.logs.nginx
 
-    Documents = nginx_logs.count_documents({})
-    print(f"{Documents} logs")
+    documents = nginx_logs.count_documents({})
+    print(f"{documents} logs")
 
     print("Methods:")
     for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
@@ -21,11 +21,11 @@ if __name__ == "__main__":
     )
     print(f"{check} status check")
 
-    pipe = [
+    pipeline = [
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
         {"$limit": 10}
     ]
     print("IPs:")
-    for ip in nginx_logs.aggregate(pipe):
+    for ip in nginx_logs.aggregate(pipeline):
         print(f"\t{ip.get('_id')}: {ip.get('count')}")
