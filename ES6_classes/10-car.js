@@ -30,10 +30,9 @@ export default class Car {
   }
 
   cloneCar() {
-    const newCar = new Car();
-    newCar.brand = this.brand;
-    newCar.motor = this.motor;
-    newCar.color = this.color;
-    return newCar;
+    if (typeof this !== 'object') {
+      throw TypeError('Car must be an object');
+    }
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
   }
 }
