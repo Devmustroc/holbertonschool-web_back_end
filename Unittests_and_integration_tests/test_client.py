@@ -74,4 +74,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Set up class"""
         cls.get_patcher = patch('requests.get', side_effect=HTTPError)
         cls.get_patcher.start()
+        mock_response_org = Mock()
+        Mock_response_repos.json.return_value = cls.repos_payload
+
 
