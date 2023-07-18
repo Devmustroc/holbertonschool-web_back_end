@@ -1,4 +1,5 @@
 export default function updateUniqueItems(groceries) {
+  const error = 'Cannot process';
   if (groceries instanceof Map) {
     for (const [key, value] of groceries) {
       if (value === 1) {
@@ -7,4 +8,5 @@ export default function updateUniqueItems(groceries) {
     }
     return groceries;
   }
+  return error;
 }
