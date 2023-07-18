@@ -7,7 +7,6 @@ export default function updateUniqueItems(groceries) {
       }
     }
     return groceries;
-  } else {
-    throw Error(error);
   }
+  throw Error(error);
 }
