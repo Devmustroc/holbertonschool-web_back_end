@@ -18,6 +18,7 @@ def index():
 
 @app.route('/users', methods=['POST'])
 def user_register():
+    """ POST /users"""
     email = request.form.get('email')
     password = request.form.get('password')
 
