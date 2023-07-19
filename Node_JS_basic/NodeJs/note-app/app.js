@@ -6,4 +6,5 @@ fs.appendFileSync('notes.txt', msg);*/
 // run 2 files in the same time
 const fl = require("./utils.js")
 
-console.log(fl)
+const sum = fl(-5, -4)
+console.log(sum)
