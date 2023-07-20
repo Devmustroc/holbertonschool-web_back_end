@@ -9,17 +9,22 @@ yargs.command({
     title: {
       describe: 'Add Title',
       demandOption: true,
-      type: 'string'
+      type: 'string',
     },
     length: {
       describe: 'note length',
       demandOption: true,
       type: 'number'
-    }
+    },
+    body : {
+      title: 'the body',
+      demandOption: true,
+      type: 'string'
+    },
   },
-  handler: () => {
+  handler: (argv) => {
 
-    console.log('Adding a new note!');
+    console.log('body: ' + argv.body + ' ' + argv.title + ' ' + argv.length);
   }
 });
 // Create remove command
@@ -62,4 +67,5 @@ yargs.command({
     console.log('reading the notes')
   }
 })
-console.log(yargs.argv)
+yargs.parse()
+
