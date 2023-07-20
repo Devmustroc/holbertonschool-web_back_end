@@ -8,7 +8,13 @@ yargs.command({
   builder: {
     title: {
       describe: 'Add Title',
-      demandOption: true
+      demandOption: true,
+      type: 'string'
+    },
+    length: {
+      describe: 'note length',
+      demandOption: true,
+      type: 'number'
     }
   },
   handler: () => {
