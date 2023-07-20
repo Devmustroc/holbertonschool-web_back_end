@@ -8,5 +8,5 @@ std.stdin.on('readable', () => {
   }
 });
 std.stdin.on('end', () => {
-    console.log('This important software is now closing');
+  console.log('This important software is now closing');
 });
