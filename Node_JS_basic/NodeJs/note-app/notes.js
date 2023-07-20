@@ -4,7 +4,20 @@ const getNotes = () => {
 }
 const addNote = function (title, body) {
   const notes = loadNotes()
-  console.log(notes)
+  const duplicateNotes = notes.filter((note) =>{
+    return nodes.title === title
+  })
+  if (duplicateNotes.length === 0) {
+    notes.push({
+      title: title,
+      body: body
+    })
+    saveNotes(notes)
+    console.log("New Node Added")
+  } else {
+    console.log("Node title Taken !")
+  }
+
 }
 const loadNotes = () => {
   try {
@@ -15,6 +28,10 @@ const loadNotes = () => {
     return []
   }
 
+}
+const saveNotes = function (notes) {
+  const dataJSON = JSON.stringify(notes)
+  fs.writeFileSync('notes.json', dataJSON)
 }
 
 module.exports = {
