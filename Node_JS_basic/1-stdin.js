@@ -6,6 +6,6 @@ std.stdin.on('readable', () => {
     std.stdout.write(`Your name is: ${name}`);
   }
 });
-std.stdin.on('end', (data) => {
+std.stdin.on('end', () => {
     console.log('This important software is now closing');
 });
