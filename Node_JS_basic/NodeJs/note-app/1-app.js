@@ -12,13 +12,18 @@ yargs.command({
       type: 'string',
     },
     body : {
-      title: 'the body',
+      title: 'Add body',
       demandOption: true,
       type: 'string'
     },
+    content : {
+      title: 'Add content',
+      demandOption: true,
+      type: 'number'
+    }
   },
   handler: (argv) => {
-    notes.addNote(argv.title, argv.body)
+    notes.addNote(argv.title, argv.body, argv.content)
   }
 });
 // Create remove command
@@ -28,11 +33,12 @@ yargs.command({
   builder: {
     title: {
       describe: 'Title remove',
-      demandOption: true
+      demandOption: true,
+      type: 'string'
     }
   },
-  handler: () => {
-    console.log('Removing the note!');
+  handler: (argv) => {
+    notes.removeNote(argv.title)
   }
 })
 yargs.parse()
