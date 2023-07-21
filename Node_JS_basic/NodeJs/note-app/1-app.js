@@ -2,6 +2,7 @@
 const yargs = require('yargs');
 const notes = require('./notes')
 
+// Create Command Yags
 yargs.command({
   command: 'add',
   describe: 'Add a new note',
@@ -22,7 +23,7 @@ yargs.command({
       type: 'number'
     }
   },
-  handler: (argv) => {
+  handler(argv) {
     notes.addNote(argv.title, argv.body, argv.content)
   }
 });
@@ -37,8 +38,15 @@ yargs.command({
       type: 'string'
     }
   },
-  handler: (argv) => {
+  handler(argv)  {
     notes.removeNote(argv.title)
+  }
+})
+yargs.command({
+  command: 'list',
+  describe: 'List all file',
+  handler(argv) {
+    notes.listNotes()
   }
 })
 yargs.parse()
