@@ -1,22 +1,20 @@
 const fs = require('fs')
+const chalk = require('chalk')
 
 
 const removeNote = function (title, body, length) {
   const notes = loadNotes()
-  console.log(notes)
-  const duplicateNotes = notes.filter((note) =>{
+  const nodeToKeep = notes.filter((note) =>{
     return note.title !== title
   })
-  console.log(duplicateNotes)
-  if (notes.length > duplicateNotes.length) {
-    notes.pop({
-      title: title,
-    })
-    saveNotes(notes)
-    console.log("Node Removed")
-  } else {
-    console.log("Node Not Found !")
+  if (notes.length > nodeToKeep.length) {
+    console.log(chalk.bgGreen('Note removed !'))
+    saveNotes(nodeToKeep)
   }
+  else {
+    console.log(chalk.bgRed('No note found !'))
+  }
+
 }
 
 const getNotes = () => {
@@ -34,9 +32,9 @@ const addNote = function (title, body, length) {
       length: length
     })
     saveNotes(notes)
-    console.log("New Node Added")
+    console.log(chalk.green('New note added !'))
   } else {
-    console.log("Node title Taken !")
+    console.log(chalk.red('Node title Taken !'))
   }
 
 }
