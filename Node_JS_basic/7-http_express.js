@@ -6,7 +6,7 @@ const port = 1245;
 const app = express();
 module.exports = app;
 
-get('/', (req, res) => {
+app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   res.send('Hello Holberton School!');
 });
