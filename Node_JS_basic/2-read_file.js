@@ -10,14 +10,14 @@ function countStudents(path) {
       const line = lines[i].trim();
       if (line !== '') {
         countStudents += 1;
-        const [fname, lname, age, field] = line.split(',');
+        const [fname, , , field] = line.split(',');
         if (!fields[field]) {
           fields[field] = {
             countField: 1,
             students: [fname],
           };
         } else {
-          fields[field].countField++;
+          fields[field].countField += 1;
           fields[field].students.push(fname);
         }
       }
