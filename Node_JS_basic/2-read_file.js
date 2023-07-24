@@ -1,17 +1,15 @@
 const fs = require('fs');
 
-
 function countStudents(path) {
   try {
-    const lines = fs.readFileSync(path, {encoding: 'utf8'}).split(/\r?\n/);
-
+    const lines = fs.readFileSync(path, { encoding: 'utf8' }).split(/\r?\n/);
     let countStudents = 0;
     const fields = {};
 
-    for (let i = 1; i < lines.length; i++) {
+    for (let i = 1; i < lines.length; i += 1) {
       const line = lines[i].trim();
       if (line !== '') {
-        countStudents++;
+        countStudents += 1;
         const [fname, lname, age, field] = line.split(',');
         if (!fields[field]) {
           fields[field] = {
