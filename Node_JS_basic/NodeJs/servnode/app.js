@@ -9,13 +9,22 @@ const SerNode = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.write('<html lang="en">');
     res.write('<head><title>Inter Message</title></head>');
-    res.write('<body><form action="/message" method="POST"><input type="text"><br><br><button type="submit">Submit</button></form></body>')
+    res.write('<body><form action="/message" method="POST"><input type="text" name="message"><br><br><button type="submit">Submit</button></form></body>')
     res.write('</html>');
     return res.end()
   }
   if (url === '/message' && method === "POST")
   {
-    fs.writeFileSync('newoutput.txt', 'Execute');
+    const body = [];
+    req.on('data', (chunk) => {
+      console.log(chunk);
+      body.push();
+    });
+    req.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString();
+      console.log(parsedBody)
+    });
+    fs.writeFileSync('message.txt', 'Execute');
     res.statusCode = 302
     res.setHeader('Location', '/');
     return res.end()
