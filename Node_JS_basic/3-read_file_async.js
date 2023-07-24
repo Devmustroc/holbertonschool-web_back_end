@@ -2,44 +2,48 @@ const fs = require('fs');
 
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    console.log("After!");
-    fs.promises.readFile(path, 'utf8')
-      .then((data) => {
-        const lines = data.trim().split('\n');
-
-        if (lines.length === 0) {
-          reject(new Error('Cannot load the database'));
+    fs.readFile(path,
+      { encoding: 'utf8', flag: 'r' },
+      (err, data) => {
+        if (err) {
+          reject(Error('Cannot load the database'));
+          return;
         }
+        const response = [];
+        let msg;
 
-        const counts = {};
+        const content = data.split('\n');
 
-        for (const line of lines) {
-          const [firstname, lastname, age, field] = line.split(',');
-          if (field) {
-            if (!counts[field]) {
-              counts[field] = {
-                count: 0,
-                list: []
-              };
-            }
-            counts[field].count++;
-            counts[field].list.push(firstname);
+        let students = content.filter((item) => item);
+
+        students = students.map((item) => item.split(','));
+
+        const studentSize = students.length ? students.length - 1 : 0;
+        msg = `Number of students: ${studentSize}`;
+        console.log(msg);
+
+        response.push(msg);
+
+        const fields = {};
+        for (const i in students) {
+          if (i !== 0) {
+            if (!fields[students[i][3]]) fields[students[i][3]] = [];
+
+            fields[students[i][3]].push(students[i][0]);
           }
         }
 
-        console.log(`Number of students: ${lines.length}`);
+        delete fields.field;
 
-        for (const field in counts) {
-          console.log(`Number of students in ${field}: ${counts[field].count}. List: ${counts[field].list.join(', ')}`);
+        for (const key of Object.keys(fields)) {
+          msg = `Number of students in ${key}: ${fields[key].length
+          }. List: ${fields[key].join(', ')}`;
+
+          console.log(msg);
+
+          response.push(msg);
         }
-
-        resolve();
-      })
-      .catch((error) => {
-        reject(new Error('Cannot load the database'));
-      })
-      .finally(() => {
-        console.log("Done!");
+        resolve(response);
       });
   });
 }
