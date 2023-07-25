@@ -1,0 +1,11 @@
+{
+  "name": "your_project_name",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node --presets babel-preset-env ./full_server/server.js ./database.csv"
+  },
+  "dependencies": {
+    "express": "latest"
+  }
+}

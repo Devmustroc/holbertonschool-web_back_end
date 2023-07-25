@@ -17,6 +17,8 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/node": "^7.22.6",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
