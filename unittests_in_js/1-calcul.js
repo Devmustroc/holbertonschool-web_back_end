@@ -1,16 +1,14 @@
-module.exports = function calculateNumber(type = 'SUM', a, b) {
-  const aRound = Math.round(a);
-  const bRound = Math.round(b);
+module.exports = function calculateNumber(type, a, b) {
+  const roundA = Math.round(a);
+  const roundB = Math.round(b);
   if (type === 'SUM') {
-    return aRound + bRound;
+    return roundA + roundB;
   } else if (type === 'SUBTRACT') {
-    return aRound - bRound;
+    return roundA - roundB;
   } else if (type === 'DIVIDE') {
-    if (bRound === 0) {
+    if (roundB === 0) {
       return 'Error';
     }
-    return aRound / bRound;
-  } else {
-    throw new TypeError('Type must be SUM, SUBTRACT or DIVIDE');
+    return roundA / roundB;
   }
-}
+};
