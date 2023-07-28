@@ -2,52 +2,49 @@ const assert = require('assert');
 const calculateNumber = require('./1-calcul');
 
 describe('calculateNumber', function() {
-  it('add two integers', function() {
+  it('add two integer', function() {
     assert.equal(calculateNumber('SUM', 1, 3), 4);
   });
-  it('add integer and one floats', function() {
+  it('add integer and float', function() {
     assert.equal(calculateNumber('SUM', 1, 3.7), 5);
   });
-  it('add two floats', function() {
+  it('add two float', function() {
     assert.equal(calculateNumber('SUM', 1.2, 3.7), 5);
   });
-  it('add negative digit and floats', function() {
-    assert.equal(calculateNumber('SUM', -1, 3.7), 3);
+  it('add two float', function() {
+    assert.equal(calculateNumber('SUM', 1.4, 4.5), 6);
   });
-  it('add two negative floats', function() {
-    assert.equal(calculateNumber('SUM', -1.2, -3.7), -5);
+  it('add negative a,d float', function() {
+    assert.equal(calculateNumber('SUM', -3, 1.2), -2);
   });
-  it('subtract two integers', function() {
-    assert.equal(calculateNumber('SUBTRACT', 1, 3), -2);
+  it('sub two integer', function() {
+    assert.equal(calculateNumber('SUBTRACT', 3, 1), 2);
   });
-  it('subtract integer and one floats', function() {
-    assert.equal(calculateNumber('SUBTRACT', 1, 3.7), -3);
+  it('sub to float', function() {
+    assert.equal(calculateNumber('SUBTRACT', 1.4, 4.5), -4);
   });
-  it('subtract two floats', function() {
+  it('sub two float', function() {
     assert.equal(calculateNumber('SUBTRACT', 1.2, 3.7), -3);
   });
-  it('subtract negative digit and floats', function() {
-    assert.equal(calculateNumber('SUBTRACT', -1, 3.7), -5);
+  it('sub two float', function() {
+    assert.equal(calculateNumber('SUBTRACT', 3.7, 1.5), 2);
   });
-  it('subtract two negative floats', function() {
-    assert.equal(calculateNumber('SUBTRACT', -1.2, -3.7), 3);
+  it('Checks 0.1 - 0.1', function() {
+    assert.equal(calculateNumber('SUBTRACT', 0.1, 0.1), 0);
   });
-  it('divide two integers', function() {
-    assert.equal(calculateNumber('DIVIDE', 1, 3), 0.3333333333333333);
+  it('divide two integer', function() {
+    assert.equal(calculateNumber('DIVIDE', 3, 1), 3);
   });
-  it('divide integer and one floats', function() {
-    assert.equal(calculateNumber('DIVIDE', 1, 3.7), 0.25);
+  it('divide two float', function() {
+    assert.equal(calculateNumber('DIVIDE', 3.5, 2.1), 2);
   });
-  it('divide two floats', function() {
-    assert.equal(calculateNumber('DIVIDE', 1.2, 3.7), 0.25);
+  it('divide two float', function() {
+    assert.equal(calculateNumber('DIVIDE', 1.4, 4.5), 0.2);
   });
-  it('divide negative digit and floats', function() {
-    assert.equal(calculateNumber('DIVIDE', -1, 3.7), -0.25);
+  it('divide integer with a zero', function() {
+    assert.equal(calculateNumber('DIVIDE', 1.4, 0), 'Error');
   });
-  it('divide two negative floats', function() {
-    assert.equal(calculateNumber('DIVIDE', -1.2, -3.7), 0.25);
-  });
-  it('divide by zero', function() {
-    assert.equal(calculateNumber('DIVIDE', 1.2, 0), 'Error');
+  it('divide two rounded 0', function() {
+    assert.equal(calculateNumber('DIVIDE', 0.1, 0.1), 'Error');
   });
 });
