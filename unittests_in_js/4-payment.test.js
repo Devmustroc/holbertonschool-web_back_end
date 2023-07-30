@@ -4,12 +4,18 @@ const sendPaymentRequestToApi = require('./3-payment');
 
 describe('sendPaymentRequestToApi', () => {
   it('should call calculateNumber', () => {
-    const calculate = sinon.spy(Utils, 'calculateNumber');
+    const calculate = sinon.stub(Utils, 'calculateNumber').returns(10);
+    const log = sinon.spy(console, 'log');
+    const totalAmount = 100;
+    const totalShipping = 20;
 
-    sendPaymentRequestToApi(100, 20);
+    sendPaymentRequestToApi(totalAmount, totalShipping);
 
     calculate.restore();
+    log.restore();
     sinon.assert.calledOnce(calculate);
-    sinon.assert.calledWithExactly(calculate, 'SUM', 100, 20);
+    sinon.assert.calledWith(calculate, 'SUM', totalAmount, totalShipping);
+    sinon.assert.calledOnce(log);
+    sinon.assert.calledWith(log, `The total is: 10`);
   });
 });
