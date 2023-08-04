@@ -3,52 +3,50 @@ const request = require('request');
 const { expect } = chai;
 
 describe('Index page', () => {
-  it('correct status code', (done) => {
-    request('http://localhost:7865', (error, response, body) => {
+  const url = 'http://localhost:7865/';
+  it('Checks the status code', (done) => {
+    request(url, (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       done();
     });
   });
-
-  it('correct content', (done) => {
-    request('http://localhost:7865', (error, response, body) => {
+  it('Checks the body', (done) => {
+    request(url, (error, response, body) => {
       expect(body).to.equal('Welcome to the payment system');
       done();
     });
   });
 });
+
 describe('Cart page', () => {
   const url = 'http://localhost:7865/cart/12';
-  const invalidUrl = 'http://localhost:7865/cart/hello';
-
-  it('correct status code for valid url', (done) => {
+  const wrongUrl = 'http://localhost:7865/cart/hello';
+  it('Checks correct status code when :id is a number', (done) => {
     request(url, (error, response, body) => {
       expect(response.statusCode).to.equal(200);
       done();
     });
   });
-
-  it('correct status code for invalid url', (done) => {
-    request(invalidUrl, (error, response, body) => {
-      expect(response.statusCode).to.equal(404);
-      done();
-    });
-  });
-
-  it('correct content for valid url', (done) => {
+  it('Checks the body when :id is a number', (done) => {
     request(url, (error, response, body) => {
       expect(body).to.equal('Payment methods for cart 12');
       done();
     });
   });
-
+  it('Checks correct status code when :id is not a number', (done) => {
+    request(wrongUrl, (error, response, body) => {
+      expect(response.statusCode).to.equal(404);
+      done();
+    });
+  });
   it('Checks the body when :id is not a number', (done) => {
-    request(invalidUrl, (error, response, body) => {
-      expect(body).to.equal('Cart not found');
+    request(wrongUrl, (error, response, body) => {
+      expect(body).to.equal('');
       done();
     });
   });
 });
+
 describe('/login endpoint', () => {
   const url = 'http://localhost:7865/login';
   const options = {
@@ -63,13 +61,14 @@ describe('/login endpoint', () => {
       done();
     });
   });
-  it('Checks the body response', (done) => {
+  it('Checks the body', (done) => {
     request.post(options, (error, response, body) => {
       expect(body).to.equal('Welcome Betty');
       done();
     });
   });
 });
+
 describe('/available_payments endpoint', () => {
   const url = 'http://localhost:7865/available_payments';
   it('Checks the status code', (done) => {
@@ -78,9 +77,10 @@ describe('/available_payments endpoint', () => {
       done();
     });
   });
-  it('Checks the body response', (done) => {
-    request(url, (error, response , body) => {
-      expect(body).to.deep.equal('{"payement_methods":{"credit_cards":true,"paypal":false}}');
+  it('Checks the body', (done) => {
+    request(url, (error, response, body) => {
+      expect(body).to.deep.equal('{"payment_methods":{"credit_cards":true,"paypal":false}}');
+      done();
     });
   });
 });
